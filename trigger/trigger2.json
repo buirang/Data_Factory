@@ -1,0 +1,91 @@
+{
+	"name": "trigger2",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "pl_WWI",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"cw_items": [
+						{
+							"source": {
+								"schema": "Application",
+								"table": "People"
+							},
+							"destination": {
+								"fileName": "people.txt"
+							}
+						},
+						{
+							"source": {
+								"schema": "Sales",
+								"table": "Customers"
+							},
+							"destination": {
+								"fileName": "customers.txt"
+							}
+						},
+						{
+							"source": {
+								"schema": "Sales",
+								"table": "Invoices"
+							},
+							"destination": {
+								"fileName": "invoices.txt"
+							}
+						},
+						{
+							"source": {
+								"schema": "Sales",
+								"table": "OrderLines"
+							},
+							"destination": {
+								"fileName": "orderlines.txt"
+							}
+						},
+						{
+							"source": {
+								"schema": "Sales",
+								"table": "Orders"
+							},
+							"destination": {
+								"fileName": "orders.txt"
+							}
+						},
+						{
+							"source": {
+								"schema": "Warehouse",
+								"table": "PackageTypes"
+							},
+							"destination": {
+								"fileName": "packagetypes.txt"
+							}
+						},
+						{
+							"source": {
+								"schema": "Warehouse",
+								"table": "StockItems"
+							},
+							"destination": {
+								"fileName": "stockIitems.txt"
+							}
+						}
+					]
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 15,
+				"startTime": "2022-12-07T23:17:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}
