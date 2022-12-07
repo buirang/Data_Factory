@@ -1,0 +1,97 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "datatxbui"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"value": ""
+		},
+		"AzureDataLakeStorage1_accountKey": {
+			"value": ""
+		},
+		"AzureSqlDatabase1_connectionString": {
+			"value": ""
+		},
+		"AzureSqlDatabase2_connectionString": {
+			"value": ""
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"value": "https://sqlvay2uvsbtmycakk.dfs.core.windows.net/"
+		},
+		"trigger2_properties_pl_WWI_parameters_cw_items": {
+			"value": [
+				{
+					"source": {
+						"schema": "Application",
+						"table": "People"
+					},
+					"destination": {
+						"fileName": "people.txt"
+					}
+				},
+				{
+					"source": {
+						"schema": "Sales",
+						"table": "Customers"
+					},
+					"destination": {
+						"fileName": "customers.txt"
+					}
+				},
+				{
+					"source": {
+						"schema": "Sales",
+						"table": "Invoices"
+					},
+					"destination": {
+						"fileName": "invoices.txt"
+					}
+				},
+				{
+					"source": {
+						"schema": "Sales",
+						"table": "OrderLines"
+					},
+					"destination": {
+						"fileName": "orderlines.txt"
+					}
+				},
+				{
+					"source": {
+						"schema": "Sales",
+						"table": "Orders"
+					},
+					"destination": {
+						"fileName": "orders.txt"
+					}
+				},
+				{
+					"source": {
+						"schema": "Warehouse",
+						"table": "PackageTypes"
+					},
+					"destination": {
+						"fileName": "packagetypes.txt"
+					}
+				},
+				{
+					"source": {
+						"schema": "Warehouse",
+						"table": "StockItems"
+					},
+					"destination": {
+						"fileName": "stockIitems.txt"
+					}
+				}
+			]
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
