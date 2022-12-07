@@ -1,0 +1,14 @@
+{
+	"name": "datatxbui",
+	"properties": {
+		"globalConfigurations": {
+			"PipelineBillingEnabled": "false"
+		}
+	},
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "ee6d44e7-75e7-4797-ab17-0a06acb63565",
+		"tenantId": "bb6c2809-fe96-4119-bca5-157df3a99b20"
+	}
+}
