@@ -16,10 +16,15 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "AzureSqlSource",
-						"sqlReaderStoredProcedureName": "[Integration].[GetOrderUpdates]",
-						"queryTimeout": "02:00:00",
-						"partitionOption": "None"
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
 					},
 					"sink": {
 						"type": "DelimitedTextSink",
@@ -44,24 +49,14 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "SourceDataset_jmq",
-						"type": "DatasetReference",
-						"parameters": {
-							"cw_schema": "@item().TABLE_SCHEMA",
-							"cw_table": "@item().TABLE_NAME"
-						}
+						"referenceName": "DelimitedText1",
+						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "DestinationDataset_jmq",
-						"type": "DatasetReference",
-						"parameters": {
-							"cw_fileName": {
-								"value": "@pipeline().parameters.cw_items",
-								"type": "Expression"
-							}
-						}
+						"referenceName": "DelimitedText2",
+						"type": "DatasetReference"
 					}
 				]
 			},
@@ -84,46 +79,26 @@
 						"partitionOption": "None"
 					},
 					"sink": {
-						"type": "DelimitedTextSink",
+						"type": "JsonSink",
 						"storeSettings": {
-							"type": "AzureBlobFSWriteSettings"
+							"type": "AzureBlobStorageWriteSettings"
 						},
 						"formatSettings": {
-							"type": "DelimitedTextWriteSettings",
-							"quoteAllText": true,
-							"fileExtension": ".txt"
+							"type": "JsonWriteSettings"
 						}
 					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
-					}
+					"enableStaging": false
 				},
 				"inputs": [
 					{
-						"referenceName": "SourceDataset_jmq",
-						"type": "DatasetReference",
-						"parameters": {
-							"cw_schema": "@item().TABLE.SCHEMA",
-							"cw_table": "@item().TABLE_NAME"
-						}
+						"referenceName": "AzureSqlTable3",
+						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "DestinationDataset_jmq",
-						"type": "DatasetReference",
-						"parameters": {
-							"cw_fileName": {
-								"value": "@pipeline().parameters.cw_items",
-								"type": "Expression"
-							}
-						}
+						"referenceName": "Json1",
+						"type": "DatasetReference"
 					}
 				]
 			},
