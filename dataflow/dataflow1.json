@@ -10,12 +10,37 @@
 						"type": "DatasetReference"
 					},
 					"name": "WWIflow"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable2",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable3",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable4",
+						"type": "DatasetReference"
+					},
+					"name": "source3"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
-					"name": "derivedColumn1"
+					"name": "WWIflow2"
 				}
 			],
 			"scriptLines": [
@@ -36,7 +61,69 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> WWIflow",
-				"WWIflow derive() ~> derivedColumn1"
+				"source(output(",
+				"          OrderID as integer,",
+				"          CustomerID as integer,",
+				"          SalespersonPersonID as integer,",
+				"          PickedByPersonID as integer,",
+				"          ContactPersonID as integer,",
+				"          BackorderOrderID as integer,",
+				"          OrderDate as date,",
+				"          ExpectedDeliveryDate as date,",
+				"          CustomerPurchaseOrderNumber as string,",
+				"          IsUndersupplyBackordered as boolean,",
+				"          Comments as string,",
+				"          DeliveryInstructions as string,",
+				"          InternalComments as string,",
+				"          PickingCompletedWhen as timestamp,",
+				"          LastEditedBy as integer,",
+				"          LastEditedWhen as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
+				"source(output(",
+				"          OrderLineID as integer,",
+				"          OrderID as integer,",
+				"          StockItemID as integer,",
+				"          Description as string,",
+				"          PackageTypeID as integer,",
+				"          Quantity as integer,",
+				"          UnitPrice as decimal(18,2),",
+				"          TaxRate as decimal(18,3),",
+				"          PickedQuantity as integer,",
+				"          PickingCompletedWhen as timestamp,",
+				"          LastEditedBy as integer,",
+				"          LastEditedWhen as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source2",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source3",
+				"WWIflow select(mapColumn(",
+				"          {Customer Key},",
+				"          {WWI Customer ID},",
+				"          Customer,",
+				"          {Bill To Customer},",
+				"          Category,",
+				"          {Buying Group},",
+				"          {Primary Contact},",
+				"          {Postal Code},",
+				"          {Valid From},",
+				"          {Valid To},",
+				"          {Lineage Key}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> WWIflow2",
+				"source1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
 			]
 		}
 	}
