@@ -47,8 +47,8 @@
 						"referenceName": "SourceDataset_jmq",
 						"type": "DatasetReference",
 						"parameters": {
-							"cw_schema": "{     \"source\": {         \"type\": \"AzureSqlSource\",         \"sqlReaderStoredProcedureName\": \"[Integration].[GetOrderUpdates]\",         \"queryTimeout\": \"02:00:00\",         \"partitionOption\": \"None\"     },",
-							"cw_table": "7"
+							"cw_schema": "@item().TABLE_SCHEMA",
+							"cw_table": "@item().TABLE_NAME"
 						}
 					}
 				],
@@ -57,7 +57,10 @@
 						"referenceName": "DestinationDataset_jmq",
 						"type": "DatasetReference",
 						"parameters": {
-							"cw_fileName": "data"
+							"cw_fileName": {
+								"value": "@pipeline().parameters.cw_items",
+								"type": "Expression"
+							}
 						}
 					}
 				]
