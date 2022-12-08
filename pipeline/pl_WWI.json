@@ -77,8 +77,9 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT * FROM [@{item().TABLE_SCHEMA}].[@{item().TABLE_NAME}]",
 						"queryTimeout": "02:00:00",
-						"partitionOption": "PhysicalPartitionsOfTable"
+						"partitionOption": "None"
 					},
 					"sink": {
 						"type": "DelimitedTextSink",
@@ -106,8 +107,8 @@
 						"referenceName": "SourceDataset_jmq",
 						"type": "DatasetReference",
 						"parameters": {
-							"cw_schema": "{     \"source\": {         \"type\": \"AzureSqlSource\",         \"queryTimeout\": \"02:00:00\",         \"partitionOption\": \"PhysicalPartitionsOfTable\"     },",
-							"cw_table": "7"
+							"cw_schema": "@item().TABLE.SCHEMA",
+							"cw_table": "@item().TABLE_NAME"
 						}
 					}
 				],
@@ -117,7 +118,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"cw_fileName": {
-								"value": "data",
+								"value": "@pipeline().parameters.cw_items",
 								"type": "Expression"
 							}
 						}
