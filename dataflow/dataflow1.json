@@ -6,39 +6,23 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "AzureSqlTable1",
+						"referenceName": "WWI_DW",
 						"type": "DatasetReference"
 					},
 					"name": "WWIflow"
 				},
 				{
-					"dataset": {
-						"referenceName": "AzureSqlTable2",
-						"type": "DatasetReference"
-					},
 					"name": "source1"
 				},
 				{
-					"dataset": {
-						"referenceName": "AzureSqlTable3",
-						"type": "DatasetReference"
-					},
 					"name": "source2"
 				},
 				{
-					"dataset": {
-						"referenceName": "AzureSqlTable4",
-						"type": "DatasetReference"
-					},
 					"name": "source3"
 				}
 			],
 			"sinks": [
 				{
-					"dataset": {
-						"referenceName": "AzureSqlTable3",
-						"type": "DatasetReference"
-					},
 					"name": "sink1"
 				}
 			],
@@ -84,9 +68,7 @@
 				"          LastEditedWhen as timestamp",
 				"     ),",
 				"     allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> source1",
+				"     validateSchema: false) ~> source1",
 				"source(output(",
 				"          OrderLineID as integer,",
 				"          OrderID as integer,",
@@ -102,13 +84,9 @@
 				"          LastEditedWhen as timestamp",
 				"     ),",
 				"     allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> source2",
+				"     validateSchema: false) ~> source2",
 				"source(allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> source3",
+				"     validateSchema: false) ~> source3",
 				"WWIflow select(mapColumn(",
 				"          {Customer Key},",
 				"          {WWI Customer ID},",
@@ -126,28 +104,9 @@
 				"     skipDuplicateMapOutputs: true) ~> WWIflow2",
 				"source1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     input(",
-				"          OrderLineID as integer,",
-				"          OrderID as integer,",
-				"          StockItemID as integer,",
-				"          Description as string,",
-				"          PackageTypeID as integer,",
-				"          Quantity as integer,",
-				"          UnitPrice as decimal(18,2),",
-				"          TaxRate as decimal(18,3),",
-				"          PickedQuantity as integer,",
-				"          PickingCompletedWhen as timestamp,",
-				"          LastEditedBy as integer,",
-				"          LastEditedWhen as timestamp",
-				"     ),",
-				"     deletable:false,",
-				"     insertable:true,",
-				"     updateable:false,",
-				"     upsertable:false,",
-				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+				"     format: 'table') ~> sink1"
 			]
 		}
 	}
