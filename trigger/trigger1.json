@@ -7,15 +7,11 @@
 		"type": "ScheduleTrigger",
 		"typeProperties": {
 			"recurrence": {
-				"frequency": "Week",
-				"interval": 15,
+				"frequency": "Minute",
+				"interval": 60,
 				"startTime": "2022-12-07T01:52:00Z",
-				"timeZone": "UTC",
-				"schedule": {
-					"weekDays": [
-						"Sunday"
-					]
-				}
+				"endTime": "2022-12-10T00:30:54Z",
+				"timeZone": "UTC"
 			}
 		}
 	}
