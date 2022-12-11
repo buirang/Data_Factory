@@ -5,7 +5,14 @@
 			{
 				"name": "ODS",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "OLTP",
+						"dependencyConditions": [
+							"Skipped"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -33,13 +40,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "AzureSqlTable4",
+						"referenceName": "WWI_ODS",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "Json2",
+						"referenceName": "WWIODS",
 						"type": "DatasetReference"
 					}
 				]
@@ -75,13 +82,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "AzureSqlTable3",
+						"referenceName": "WWI_DF",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "Json1",
+						"referenceName": "WWIdfsink",
 						"type": "DatasetReference"
 					}
 				]
@@ -89,7 +96,14 @@
 			{
 				"name": "DW",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "ODS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -127,13 +141,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "AzureSqlTable1",
+						"referenceName": "WWI_DW",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "DelimitedText1",
+						"referenceName": "WWIdw",
 						"type": "DatasetReference"
 					}
 				]
