@@ -27,74 +27,6 @@
 			"type": "string",
 			"defaultValue": "https://sqlvay2uvsbtmycakk.dfs.core.windows.net/"
 		},
-		"trigger2_properties_pl_WWI_parameters_cw_items": {
-			"type": "array",
-			"defaultValue": [
-				{
-					"source": {
-						"schema": "Application",
-						"table": "People"
-					},
-					"destination": {
-						"fileName": "people.txt"
-					}
-				},
-				{
-					"source": {
-						"schema": "Sales",
-						"table": "Customers"
-					},
-					"destination": {
-						"fileName": "customers.txt"
-					}
-				},
-				{
-					"source": {
-						"schema": "Sales",
-						"table": "Invoices"
-					},
-					"destination": {
-						"fileName": "invoices.txt"
-					}
-				},
-				{
-					"source": {
-						"schema": "Sales",
-						"table": "OrderLines"
-					},
-					"destination": {
-						"fileName": "orderlines.txt"
-					}
-				},
-				{
-					"source": {
-						"schema": "Sales",
-						"table": "Orders"
-					},
-					"destination": {
-						"fileName": "orders.txt"
-					}
-				},
-				{
-					"source": {
-						"schema": "Warehouse",
-						"table": "PackageTypes"
-					},
-					"destination": {
-						"fileName": "packagetypes.txt"
-					}
-				},
-				{
-					"source": {
-						"schema": "Warehouse",
-						"table": "StockItems"
-					},
-					"destination": {
-						"fileName": "stockIitems.txt"
-					}
-				}
-			]
-		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -136,9 +68,6 @@
 					},
 					"AzureDataLakeStorage1_properties_typeProperties_url": {
 						"value": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]"
-					},
-					"trigger2_properties_pl_WWI_parameters_cw_items": {
-						"value": "[parameters('trigger2_properties_pl_WWI_parameters_cw_items')]"
 					}
 				}
 			},

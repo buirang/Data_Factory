@@ -26,74 +26,6 @@
 		"AzureDataLakeStorage1_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://sqlvay2uvsbtmycakk.dfs.core.windows.net/"
-		},
-		"trigger2_properties_pl_WWI_parameters_cw_items": {
-			"type": "array",
-			"defaultValue": [
-				{
-					"source": {
-						"schema": "Application",
-						"table": "People"
-					},
-					"destination": {
-						"fileName": "people.txt"
-					}
-				},
-				{
-					"source": {
-						"schema": "Sales",
-						"table": "Customers"
-					},
-					"destination": {
-						"fileName": "customers.txt"
-					}
-				},
-				{
-					"source": {
-						"schema": "Sales",
-						"table": "Invoices"
-					},
-					"destination": {
-						"fileName": "invoices.txt"
-					}
-				},
-				{
-					"source": {
-						"schema": "Sales",
-						"table": "OrderLines"
-					},
-					"destination": {
-						"fileName": "orderlines.txt"
-					}
-				},
-				{
-					"source": {
-						"schema": "Sales",
-						"table": "Orders"
-					},
-					"destination": {
-						"fileName": "orders.txt"
-					}
-				},
-				{
-					"source": {
-						"schema": "Warehouse",
-						"table": "PackageTypes"
-					},
-					"destination": {
-						"fileName": "packagetypes.txt"
-					}
-				},
-				{
-					"source": {
-						"schema": "Warehouse",
-						"table": "StockItems"
-					},
-					"destination": {
-						"fileName": "stockIitems.txt"
-					}
-				}
-			]
 		}
 	},
 	"variables": {
@@ -177,7 +109,130 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/AzureSqlTable1')]",
+			"name": "[concat(parameters('factoryName'), '/DimentionTableDW')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase2",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/WWIODS')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "newdata"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"OrderID": {
+							"type": "integer"
+						},
+						"OrderLineID": {
+							"type": "integer"
+						},
+						"CustomerID": {
+							"type": "integer"
+						},
+						"LastEditedBy": {
+							"type": "integer"
+						},
+						"InvoiceID": {
+							"type": "integer"
+						},
+						"PackageTypeID": {
+							"type": "integer"
+						},
+						"StockItemID": {
+							"type": "integer"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/WWI_DF')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "OrderID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "OrderLineID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "CustomerID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "LastEditedBy",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "InvoiceID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "PackageTypeID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "StockItemID",
+						"type": "int",
+						"precision": 10
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "WWI_DF"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/WWI_DW')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -248,7 +303,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/AzureSqlTable2')]",
+			"name": "[concat(parameters('factoryName'), '/WWI_ODS')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -260,82 +315,46 @@
 				"type": "AzureSqlTable",
 				"schema": [
 					{
-						"name": "OrderID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "CustomerID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "SalespersonPersonID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "PickedByPersonID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "ContactPersonID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "BackorderOrderID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "OrderDate",
-						"type": "date"
-					},
-					{
-						"name": "ExpectedDeliveryDate",
-						"type": "date"
-					},
-					{
-						"name": "CustomerPurchaseOrderNumber",
+						"name": "StockItemName",
 						"type": "nvarchar"
 					},
 					{
-						"name": "IsUndersupplyBackordered",
-						"type": "bit"
-					},
-					{
-						"name": "Comments",
+						"name": "DeliveryAddress",
 						"type": "nvarchar"
 					},
 					{
-						"name": "DeliveryInstructions",
+						"name": "CityName",
 						"type": "nvarchar"
 					},
 					{
-						"name": "InternalComments",
+						"name": "StateName",
 						"type": "nvarchar"
 					},
 					{
-						"name": "PickingCompletedWhen",
-						"type": "datetime2",
-						"scale": 7
+						"name": "CountryName",
+						"type": "nvarchar"
 					},
 					{
-						"name": "LastEditedBy",
+						"name": "CustomerName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CustomerContactPersonName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CustomerPhoneNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Quantity",
 						"type": "int",
 						"precision": 10
-					},
-					{
-						"name": "LastEditedWhen",
-						"type": "datetime2",
-						"scale": 7
 					}
 				],
 				"typeProperties": {
-					"schema": "Sales",
-					"table": "Orders"
+					"schema": "dbo",
+					"table": "WWI_ODS"
 				}
 			},
 			"dependsOn": [
@@ -343,7 +362,30 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DelimitedText1')]",
+			"name": "[concat(parameters('factoryName'), '/WWIdfsink')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "newdata"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/WWIdw')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -370,103 +412,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DelimitedText2')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureDataLakeStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileSystem": "datalake"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DestinationDataset_jmq')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureDataLakeStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"cw_fileName": {
-						"type": "String"
-					}
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": {
-							"value": "@dataset().cw_fileName",
-							"type": "Expression"
-						},
-						"fileSystem": "datalake"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SourceDataset_jmq')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase1",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"cw_schema": {
-						"type": "String"
-					},
-					"cw_table": {
-						"type": "String"
-					}
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": {
-						"value": "@dataset().cw_schema",
-						"type": "Expression"
-					},
-					"table": {
-						"value": "@dataset().cw_table",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AzureSqlTable3')]",
+			"name": "[concat(parameters('factoryName'), '/WatermarkDatatset')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -478,70 +424,19 @@
 				"type": "AzureSqlTable",
 				"schema": [
 					{
-						"name": "OrderLineID",
-						"type": "int",
-						"precision": 10
+						"name": "TableName",
+						"type": "varchar"
 					},
 					{
-						"name": "OrderID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "StockItemID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Description",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PackageTypeID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Quantity",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "UnitPrice",
-						"type": "decimal",
-						"precision": 18,
-						"scale": 2
-					},
-					{
-						"name": "TaxRate",
-						"type": "decimal",
-						"precision": 18,
+						"name": "WatermarkValue",
+						"type": "datetime",
+						"precision": 23,
 						"scale": 3
-					},
-					{
-						"name": "PickedQuantity",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "PickingCompletedWhen",
-						"type": "datetime2",
-						"scale": 7
-					},
-					{
-						"name": "LastEditedBy",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "LastEditedWhen",
-						"type": "datetime2",
-						"scale": 7
 					}
 				],
 				"typeProperties": {
-					"schema": "Sales",
-					"table": "OrderLines"
+					"schema": "dbo",
+					"table": "watermarktable"
 				}
 			},
 			"dependsOn": [
@@ -549,53 +444,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Json1')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Json",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"container": "newcontainer"
-					}
-				},
-				"schema": {}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Json2')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Json",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"container": "newcontainer"
-					}
-				},
-				"schema": {}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AzureSqlTable4')]",
+			"name": "[concat(parameters('factoryName'), '/AzureSqlTable1')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -605,14 +454,57 @@
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
-				"schema": [],
+				"schema": [
+					{
+						"name": "PersonID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Name",
+						"type": "varchar"
+					},
+					{
+						"name": "LastModifytime",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
 				"typeProperties": {
-					"schema": "Sales",
-					"table": "Invoices"
+					"schema": "dbo",
+					"table": "data_source_table"
 				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SinkDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "incrementalcopy",
+						"container": "adf"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
 			]
 		},
 		{
@@ -624,7 +516,14 @@
 					{
 						"name": "ODS",
 						"type": "Copy",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "OLTP",
+								"dependencyConditions": [
+									"Skipped"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "0.12:00:00",
 							"retry": 0,
@@ -652,14 +551,14 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "AzureSqlTable4",
+								"referenceName": "WWI_ODS",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "Json2",
+								"referenceName": "WWIODS",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -696,14 +595,14 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "AzureSqlTable3",
+								"referenceName": "WWI_DF",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "Json1",
+								"referenceName": "WWIdfsink",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -712,7 +611,14 @@
 					{
 						"name": "DW",
 						"type": "Copy",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "ODS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "0.12:00:00",
 							"retry": 0,
@@ -750,6 +656,125 @@
 						},
 						"inputs": [
 							{
+								"referenceName": "WWI_DW",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "WWIdw",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "LookupOldWaterMarkActivity",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "WatermarkDatatset",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "LookupNewWaterMarkActivity",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "select MAX(LastModifytime) as NewWatermarkvalue from data_source_table",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "AzureSqlTable1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "IncrementalCopyActivity",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "LookupOldWaterMarkActivity",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "LookupNewWaterMarkActivity",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "select * from data_source_table where LastModifytime > '@{activity('LookupOldWaterMarkActivity').output.firstRow.WatermarkValue}' and LastModifytime <= '@{activity('LookupNewWaterMarkActivity').output.firstRow.NewWatermarkvalue}'",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
 								"referenceName": "AzureSqlTable1",
 								"type": "DatasetReference",
 								"parameters": {}
@@ -757,11 +782,41 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "DelimitedText1",
+								"referenceName": "SinkDataset",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						]
+					},
+					{
+						"name": "StoredProceduretoWriteWatermarkActivity",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[usp_write_watermark]",
+							"storedProcedureParameters": {
+								"LastModifiedtime": {
+									"value": "@{activity('LookupNewWaterMarkActivity').output.firstRow.NewWatermarkvalue}.",
+									"type": "DateTime"
+								},
+								"TableName": {
+									"value": "@{activity('LookupOldWaterMarkActivity').output.firstRow.TableName.",
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDatabase1",
+							"type": "LinkedServiceReference"
+						}
 					}
 				],
 				"policy": {
@@ -841,12 +896,16 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/AzureSqlTable4')]",
-				"[concat(variables('factoryId'), '/datasets/Json2')]",
-				"[concat(variables('factoryId'), '/datasets/AzureSqlTable3')]",
-				"[concat(variables('factoryId'), '/datasets/Json1')]",
+				"[concat(variables('factoryId'), '/datasets/WWI_ODS')]",
+				"[concat(variables('factoryId'), '/datasets/WWIODS')]",
+				"[concat(variables('factoryId'), '/datasets/WWI_DF')]",
+				"[concat(variables('factoryId'), '/datasets/WWIdfsink')]",
+				"[concat(variables('factoryId'), '/datasets/WWI_DW')]",
+				"[concat(variables('factoryId'), '/datasets/WWIdw')]",
+				"[concat(variables('factoryId'), '/datasets/WatermarkDatatset')]",
 				"[concat(variables('factoryId'), '/datasets/AzureSqlTable1')]",
-				"[concat(variables('factoryId'), '/datasets/DelimitedText1')]"
+				"[concat(variables('factoryId'), '/datasets/SinkDataset')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
 			]
 		},
 		{
@@ -859,48 +918,83 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "AzureSqlTable1",
+								"referenceName": "WWI_DF",
 								"type": "DatasetReference"
 							},
-							"name": "WWIflow"
+							"name": "OLTP"
 						},
 						{
 							"dataset": {
-								"referenceName": "AzureSqlTable2",
+								"referenceName": "WWI_ODS",
 								"type": "DatasetReference"
 							},
-							"name": "source1"
+							"name": "ODStransfer"
 						},
 						{
 							"dataset": {
-								"referenceName": "AzureSqlTable3",
+								"referenceName": "WWI_DW",
 								"type": "DatasetReference"
 							},
-							"name": "source2"
-						},
-						{
-							"dataset": {
-								"referenceName": "AzureSqlTable4",
-								"type": "DatasetReference"
-							},
-							"name": "source3"
+							"name": "DWScdtype2"
 						}
 					],
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "AzureSqlTable3",
+								"referenceName": "WWI_ODS",
 								"type": "DatasetReference"
 							},
-							"name": "sink1"
+							"name": "ODS"
+						},
+						{
+							"dataset": {
+								"referenceName": "WWI_DW",
+								"type": "DatasetReference"
+							},
+							"name": "DW"
 						}
 					],
 					"transformations": [
 						{
-							"name": "WWIflow2"
+							"name": "derivedColumn1"
+						},
+						{
+							"name": "surrogateKey1"
+						},
+						{
+							"name": "exists1"
 						}
 					],
 					"scriptLines": [
+						"source(output(",
+						"          OrderID as integer,",
+						"          OrderLineID as integer,",
+						"          CustomerID as integer,",
+						"          LastEditedBy as integer,",
+						"          InvoiceID as integer,",
+						"          PackageTypeID as integer,",
+						"          StockItemID as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     limit: 100,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> OLTP",
+						"source(output(",
+						"          StockItemName as string,",
+						"          DeliveryAddress as string,",
+						"          CityName as string,",
+						"          StateName as string,",
+						"          CountryName as string,",
+						"          CustomerName as string,",
+						"          CustomerContactPersonName as string,",
+						"          CustomerPhoneNumber as string,",
+						"          Quantity as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> ODStransfer",
 						"source(output(",
 						"          {Customer Key} as integer,",
 						"          {WWI Customer ID} as integer,",
@@ -917,81 +1011,26 @@
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     format: 'table') ~> WWIflow",
-						"source(output(",
-						"          OrderID as integer,",
-						"          CustomerID as integer,",
-						"          SalespersonPersonID as integer,",
-						"          PickedByPersonID as integer,",
-						"          ContactPersonID as integer,",
-						"          BackorderOrderID as integer,",
-						"          OrderDate as date,",
-						"          ExpectedDeliveryDate as date,",
-						"          CustomerPurchaseOrderNumber as string,",
-						"          IsUndersupplyBackordered as boolean,",
-						"          Comments as string,",
-						"          DeliveryInstructions as string,",
-						"          InternalComments as string,",
-						"          PickingCompletedWhen as timestamp,",
-						"          LastEditedBy as integer,",
-						"          LastEditedWhen as timestamp",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     format: 'table') ~> source1",
-						"source(output(",
-						"          OrderLineID as integer,",
-						"          OrderID as integer,",
-						"          StockItemID as integer,",
-						"          Description as string,",
-						"          PackageTypeID as integer,",
-						"          Quantity as integer,",
-						"          UnitPrice as decimal(18,2),",
-						"          TaxRate as decimal(18,3),",
-						"          PickedQuantity as integer,",
-						"          PickingCompletedWhen as timestamp,",
-						"          LastEditedBy as integer,",
-						"          LastEditedWhen as timestamp",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     format: 'table') ~> source2",
-						"source(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     format: 'table') ~> source3",
-						"WWIflow select(mapColumn(",
-						"          {Customer Key},",
-						"          {WWI Customer ID},",
-						"          Customer,",
-						"          {Bill To Customer},",
-						"          Category,",
-						"          {Buying Group},",
-						"          {Primary Contact},",
-						"          {Postal Code},",
-						"          {Valid From},",
-						"          {Valid To},",
-						"          {Lineage Key}",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> WWIflow2",
-						"source1 sink(allowSchemaDrift: true,",
+						"     format: 'table') ~> DWScdtype2",
+						"DWScdtype2 derive({Customer Key} = {Customer Key} < 100) ~> derivedColumn1",
+						"derivedColumn1 keyGenerate(output({Lineage Key} as long),",
+						"     startAt: 1L,",
+						"     stepValue: 1L) ~> surrogateKey1",
+						"surrogateKey1, OLTP exists({WWI Customer ID} == OrderID,",
+						"     negate:false,",
+						"     broadcast: 'auto')~> exists1",
+						"OLTP sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     input(",
-						"          OrderLineID as integer,",
-						"          OrderID as integer,",
-						"          StockItemID as integer,",
-						"          Description as string,",
-						"          PackageTypeID as integer,",
-						"          Quantity as integer,",
-						"          UnitPrice as decimal(18,2),",
-						"          TaxRate as decimal(18,3),",
-						"          PickedQuantity as integer,",
-						"          PickingCompletedWhen as timestamp,",
-						"          LastEditedBy as integer,",
-						"          LastEditedWhen as timestamp",
+						"          StockItemName as string,",
+						"          DeliveryAddress as string,",
+						"          CityName as string,",
+						"          StateName as string,",
+						"          CountryName as string,",
+						"          CustomerName as string,",
+						"          CustomerContactPersonName as string,",
+						"          CustomerPhoneNumber as string,",
+						"          Quantity as integer",
 						"     ),",
 						"     deletable:false,",
 						"     insertable:true,",
@@ -1000,77 +1039,37 @@
 						"     format: 'table',",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+						"     errorHandlingOption: 'stopOnFirstError') ~> ODS",
+						"ODStransfer sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          {Customer Key} as integer,",
+						"          {WWI Customer ID} as integer,",
+						"          Customer as string,",
+						"          {Bill To Customer} as string,",
+						"          Category as string,",
+						"          {Buying Group} as string,",
+						"          {Primary Contact} as string,",
+						"          {Postal Code} as string,",
+						"          {Valid From} as timestamp,",
+						"          {Valid To} as timestamp,",
+						"          {Lineage Key} as integer",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> DW"
 					]
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/AzureSqlTable1')]",
-				"[concat(variables('factoryId'), '/datasets/AzureSqlTable2')]",
-				"[concat(variables('factoryId'), '/datasets/AzureSqlTable3')]",
-				"[concat(variables('factoryId'), '/datasets/AzureSqlTable4')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/trigger1')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "pl_WWI",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Minute",
-						"interval": 15,
-						"startTime": "2022-12-07T01:52:00Z",
-						"timeZone": "UTC"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/pl_WWI')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/trigger2')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "pl_WWI",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"cw_items": "[parameters('trigger2_properties_pl_WWI_parameters_cw_items')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Minute",
-						"interval": 15,
-						"startTime": "2022-12-07T23:17:00Z",
-						"timeZone": "UTC"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/pl_WWI')]"
+				"[concat(variables('factoryId'), '/datasets/WWI_DF')]",
+				"[concat(variables('factoryId'), '/datasets/WWI_ODS')]",
+				"[concat(variables('factoryId'), '/datasets/WWI_DW')]"
 			]
 		}
 	]
