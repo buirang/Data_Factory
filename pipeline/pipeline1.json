@@ -24,8 +24,14 @@
 						"referenceName": "WWI_Std_sql",
 						"type": "DatasetReference",
 						"parameters": {
-							"sourceSchema": "sales",
-							"TableName": "orders",
+							"sourceSchema": {
+								"value": "@pipeline().parameters.LookupSchema",
+								"type": "Expression"
+							},
+							"TableName": {
+								"value": "@pipeline().parameters.LookupTable",
+								"type": "Expression"
+							},
 							"azureSQLdomainName": "mysqlservertxbui.database.windows.net",
 							"DBName": "WideWorldImporters-Standard",
 							"UserName": "azureuser",
@@ -143,6 +149,12 @@
 				"type": "string"
 			},
 			"SinkTableName": {
+				"type": "string"
+			},
+			"LookupSchema": {
+				"type": "string"
+			},
+			"LookupTable": {
 				"type": "string"
 			}
 		},
