@@ -43,14 +43,28 @@
 							"sourceSchema": {
 								"value": "@pipeline().parameters.TableName",
 								"type": "Expression"
+							},
+							"TableName": {
+								"value": "@pipeline().parameters.TableName",
+								"type": "Expression"
 							}
 						}
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "WWI_sink",
-						"type": "DatasetReference"
+						"referenceName": "WWI_Std_sql",
+						"type": "DatasetReference",
+						"parameters": {
+							"sourceSchema": {
+								"value": "@pipeline().parameters.SinkSchema",
+								"type": "Expression"
+							},
+							"TableName": {
+								"value": "@pipeline().parameters.SinkTablename",
+								"type": "Expression"
+							}
+						}
 					}
 				]
 			}
