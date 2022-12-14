@@ -5,10 +5,22 @@
 			"referenceName": "WWI_Standard_Dynamic",
 			"type": "LinkedServiceReference",
 			"parameters": {
-				"azureSQLdomainName": "mysqlservertxbui.database.windows.net",
-				"DBName": "WideWorldImporters-Standard",
-				"UserName": "azureuser",
-				"Password": "Thithuy1!"
+				"azureSQLdomainName": {
+					"value": "@dataset().azureSQLdomainName",
+					"type": "Expression"
+				},
+				"DBName": {
+					"value": "@dataset().DBName",
+					"type": "Expression"
+				},
+				"UserName": {
+					"value": "@dataset().UserName",
+					"type": "Expression"
+				},
+				"Password": {
+					"value": "@dataset().Password",
+					"type": "Expression"
+				}
 			}
 		},
 		"parameters": {
@@ -17,6 +29,22 @@
 			},
 			"TableName": {
 				"type": "String"
+			},
+			"azureSQLdomainName": {
+				"type": "string",
+				"defaultValue": "mysqlservertxbui.database.windows.net"
+			},
+			"DBName": {
+				"type": "string",
+				"defaultValue": "WideWorldImporters-Standard"
+			},
+			"UserName": {
+				"type": "string",
+				"defaultValue": "azureuser"
+			},
+			"Password": {
+				"type": "string",
+				"defaultValue": "Thithuy1!"
 			}
 		},
 		"annotations": [],
