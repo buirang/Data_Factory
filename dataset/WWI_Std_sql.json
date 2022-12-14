@@ -1,0 +1,36 @@
+{
+	"name": "WWI_Std_sql",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "WWI_Standard_Dynamic",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"azureSQLdomainName": "mysqlservertxbui.database.windows.net",
+				"DBName": "WideWorldImporters-Standard",
+				"UserName": "azureuser",
+				"Password": "Thithuy1!"
+			}
+		},
+		"parameters": {
+			"sourceSchema": {
+				"type": "String"
+			},
+			"TableName": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": {
+				"value": "@dataset().sourceSchema",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@dataset().TableName",
+				"type": "Expression"
+			}
+		}
+	}
+}
