@@ -104,11 +104,11 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"sourceSchema": {
-											"value": "@item()",
+											"value": "@pipeline().parameters.sourceShema",
 											"type": "Expression"
 										},
 										"TableName": {
-											"value": "@item()",
+											"value": "@pipeline().parameters.sourceTableName",
 											"type": "Expression"
 										},
 										"azureSQLdomainName": "mysqlservertxbui.database.windows.net",
@@ -124,11 +124,11 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"sourceSchema": {
-											"value": "@item()",
+											"value": "@pipeline().parameters.SinkSchema",
 											"type": "Expression"
 										},
 										"TableName": {
-											"value": "@item()",
+											"value": "@pipeline().parameters.SinkTableName",
 											"type": "Expression"
 										},
 										"azureSQLdomainName": "mysqlservertxbui.database.windows.net",
