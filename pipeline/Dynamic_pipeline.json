@@ -1,10 +1,10 @@
 {
-	"name": "pipeline1",
+	"name": "Dynamic_pipeline",
 	"properties": {
 		"activities": [
 			{
-				"name": "Lookup1",
-				"type": "Lookup",
+				"name": "Copy data1",
+				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -20,16 +20,32 @@
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
-					"dataset": {
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
 						"referenceName": "WWI_Std_sql",
 						"type": "DatasetReference",
 						"parameters": {
 							"sourceSchema": {
-								"value": "@pipeline().parameters.LookupSchema",
+								"value": "@pipeline().parameters.sourceSchema",
 								"type": "Expression"
 							},
 							"TableName": {
-								"value": "@pipeline().parameters.LookupTable",
+								"value": "@pipeline().parameters.TableName",
 								"type": "Expression"
 							},
 							"azureSQLdomainName": "mysqlservertxbui.database.windows.net",
@@ -38,123 +54,64 @@
 							"Password": "Thithuy1!"
 						}
 					}
-				}
-			},
-			{
-				"name": "For Each File Name",
-				"type": "ForEach",
-				"dependsOn": [
-					{
-						"activity": "Lookup1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
 				],
-				"userProperties": [],
-				"typeProperties": {
-					"items": {
-						"value": "@activity('Lookup1').output",
-						"type": "Expression"
-					},
-					"isSequential": false,
-					"batchCount": 1,
-					"activities": [
-						{
-							"name": "Copy data1",
-							"type": "Copy",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "0.12:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
+				"outputs": [
+					{
+						"referenceName": "WWI_Std_sql",
+						"type": "DatasetReference",
+						"parameters": {
+							"sourceSchema": {
+								"value": "@pipeline().parameters.SinkSchema",
+								"type": "Expression"
 							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "AzureSqlSource",
-									"queryTimeout": "02:00:00",
-									"partitionOption": "None"
-								},
-								"sink": {
-									"type": "AzureSqlSink",
-									"writeBehavior": "insert",
-									"sqlWriterUseTableLock": false
-								},
-								"enableStaging": false,
-								"translator": {
-									"type": "TabularTranslator",
-									"typeConversion": true,
-									"typeConversionSettings": {
-										"allowDataTruncation": true,
-										"treatBooleanAsNumber": false
-									}
-								}
+							"TableName": {
+								"value": "@pipeline().parameters.SinkTablename",
+								"type": "Expression"
 							},
-							"inputs": [
-								{
-									"referenceName": "WWI_Std_sql",
-									"type": "DatasetReference",
-									"parameters": {
-										"sourceSchema": {
-											"value": "@item()",
-											"type": "Expression"
-										},
-										"TableName": {
-											"value": "@item()",
-											"type": "Expression"
-										},
-										"azureSQLdomainName": "mysqlservertxbui.database.windows.net",
-										"DBName": "WideWorldImporters-Standard",
-										"UserName": "azureuser",
-										"Password": "Thithuy1!"
-									}
-								}
-							],
-							"outputs": [
-								{
-									"referenceName": "WWI_Std_sql",
-									"type": "DatasetReference",
-									"parameters": {
-										"sourceSchema": {
-											"value": "@item()",
-											"type": "Expression"
-										},
-										"TableName": {
-											"value": "@item()",
-											"type": "Expression"
-										},
-										"azureSQLdomainName": "mysqlservertxbui.database.windows.net",
-										"DBName": "WideWorldImporters-Standard",
-										"UserName": "azureuser",
-										"Password": "Thithuy1!"
-									}
-								}
-							]
+							"azureSQLdomainName": "mysqlservertxbui.database.windows.net",
+							"DBName": "WideWorldImporters-Standard",
+							"UserName": "azureuser",
+							"Password": "Thithuy1!"
 						}
-					]
-				}
+					}
+				]
 			}
 		],
 		"parameters": {
-			"sourceShema": {
+			"sourceSchema": {
 				"type": "string"
 			},
-			"sourceTableName": {
+			"TableName": {
 				"type": "string"
 			},
 			"SinkSchema": {
 				"type": "string"
 			},
-			"SinkTableName": {
+			"SinkTablename": {
 				"type": "string"
 			},
-			"LookupSchema": {
+			"SourceSQLdomainName": {
 				"type": "string"
 			},
-			"LookupTable": {
+			"SourceDBName": {
+				"type": "string"
+			},
+			"Sourceusername": {
+				"type": "string"
+			},
+			"Sourcepw": {
+				"type": "string"
+			},
+			"SinkDomainName": {
+				"type": "string"
+			},
+			"SinkDBName": {
+				"type": "string"
+			},
+			"Sinkusername": {
+				"type": "string"
+			},
+			"Sinkpw": {
 				"type": "string"
 			}
 		},
