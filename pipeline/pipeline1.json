@@ -99,11 +99,11 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"sourceSchema": {
-											"value": "sales",
+											"value": "@item()",
 											"type": "Expression"
 										},
 										"TableName": {
-											"value": "Orders",
+											"value": "@item()",
 											"type": "Expression"
 										},
 										"azureSQLdomainName": "mysqlservertxbui.database.windows.net",
@@ -119,11 +119,11 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"sourceSchema": {
-											"value": "sales",
+											"value": "@item()",
 											"type": "Expression"
 										},
 										"TableName": {
-											"value": "orders",
+											"value": "@item()",
 											"type": "Expression"
 										},
 										"azureSQLdomainName": "mysqlservertxbui.database.windows.net",
