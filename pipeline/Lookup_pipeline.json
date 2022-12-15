@@ -45,7 +45,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Lookup1').output.value",
+						"value": "@activity('Lookup1').output.pipelineReturnValue",
 						"type": "Expression"
 					},
 					"isSequential": false,
@@ -92,11 +92,11 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"sourceSchema": {
-											"value": "@pipeline().parameters.sourceSchema",
+											"value": "@pipeline().parameters.sourceShema",
 											"type": "Expression"
 										},
 										"TableName": {
-											"value": "@pipeline().parameters.TableName",
+											"value": "@pipeline().parameters.sourceTableName",
 											"type": "Expression"
 										},
 										"azureSQLdomainName": "mysqlservertxbui.database.windows.net",
