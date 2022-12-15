@@ -51,9 +51,10 @@
 						]
 					}
 				],
+				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Lookup1').output",
+						"value": "@activity('Copy data1').output",
 						"type": "Expression"
 					},
 					"isSequential": false,
@@ -139,22 +140,28 @@
 		],
 		"parameters": {
 			"sourceShema": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "sales"
 			},
 			"sourceTableName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "orders"
 			},
 			"SinkSchema": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "dbo"
 			},
 			"SinkTableName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "orders"
 			},
 			"LookupSchema": {
-				"type": "object"
+				"type": "string",
+				"defaultValue": "sales"
 			},
 			"LookupTable": {
-				"type": "object"
+				"type": "string",
+				"defaultValue": "orderlines"
 			}
 		},
 		"annotations": []
