@@ -9,9 +9,6 @@
 				},
 				{
 					"name": "ODStransfer"
-				},
-				{
-					"name": "DWScdtype2"
 				}
 			],
 			"sinks": [
@@ -22,17 +19,7 @@
 					"name": "DW"
 				}
 			],
-			"transformations": [
-				{
-					"name": "derivedColumn1"
-				},
-				{
-					"name": "surrogateKey1"
-				},
-				{
-					"name": "exists1"
-				}
-			],
+			"transformations": [],
 			"scriptLines": [
 				"source(output(",
 				"          OrderID as integer,",
@@ -59,28 +46,6 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false) ~> ODStransfer",
-				"source(output(",
-				"          {Customer Key} as integer,",
-				"          {WWI Customer ID} as integer,",
-				"          Customer as string,",
-				"          {Bill To Customer} as string,",
-				"          Category as string,",
-				"          {Buying Group} as string,",
-				"          {Primary Contact} as string,",
-				"          {Postal Code} as string,",
-				"          {Valid From} as timestamp,",
-				"          {Valid To} as timestamp,",
-				"          {Lineage Key} as integer",
-				"     ),",
-				"     allowSchemaDrift: true,",
-				"     validateSchema: false) ~> DWScdtype2",
-				"DWScdtype2 derive({Customer Key} = {Customer Key} < 100) ~> derivedColumn1",
-				"derivedColumn1 keyGenerate(output({Lineage Key} as long),",
-				"     startAt: 1L,",
-				"     stepValue: 1L) ~> surrogateKey1",
-				"surrogateKey1, OLTP exists({WWI Customer ID} == OrderID,",
-				"     negate:false,",
-				"     broadcast: 'auto')~> exists1",
 				"OLTP sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     skipDuplicateMapInputs: true,",
