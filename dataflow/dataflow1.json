@@ -5,57 +5,77 @@
 		"typeProperties": {
 			"sources": [
 				{
+					"dataset": {
+						"referenceName": "WWI_Std_sql",
+						"type": "DatasetReference"
+					},
 					"name": "OLTP"
 				},
 				{
+					"dataset": {
+						"referenceName": "AzureSqlTable1",
+						"type": "DatasetReference"
+					},
 					"name": "ODStransfer"
 				}
 			],
 			"sinks": [
 				{
+					"dataset": {
+						"referenceName": "AzureSqlTable1",
+						"type": "DatasetReference"
+					},
 					"name": "ODS"
 				},
 				{
+					"dataset": {
+						"referenceName": "DimentionTableDW",
+						"type": "DatasetReference"
+					},
 					"name": "DW"
 				}
 			],
 			"transformations": [],
 			"scriptLines": [
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     limit: 100,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> OLTP",
 				"source(output(",
-				"          OrderID as integer,",
-				"          OrderLineID as integer,",
-				"          CustomerID as integer,",
-				"          LastEditedBy as integer,",
-				"          InvoiceID as integer,",
-				"          PackageTypeID as integer,",
-				"          StockItemID as integer",
+				"          PersonID as integer,",
+				"          Name as string,",
+				"          LastModifytime as timestamp",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     limit: 100) ~> OLTP",
-				"source(output(",
-				"          StockItemName as string,",
-				"          DeliveryAddress as string,",
-				"          CityName as string,",
-				"          StateName as string,",
-				"          CountryName as string,",
-				"          CustomerName as string,",
-				"          CustomerContactPersonName as string,",
-				"          CustomerPhoneNumber as string,",
-				"          Quantity as integer",
-				"     ),",
-				"     allowSchemaDrift: true,",
-				"     validateSchema: false) ~> ODStransfer",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> ODStransfer",
 				"OLTP sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     input(",
+				"          PersonID as integer,",
+				"          Name as string,",
+				"          LastModifytime as timestamp",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     format: 'table') ~> ODS",
+				"     errorHandlingOption: 'stopOnFirstError') ~> ODS",
 				"ODStransfer sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     format: 'table') ~> DW"
+				"     errorHandlingOption: 'stopOnFirstError') ~> DW"
 			]
 		}
 	}
