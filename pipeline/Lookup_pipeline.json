@@ -28,7 +28,7 @@
 							"Target_tablename": "orders"
 						}
 					},
-					"firstRowOnly": true
+					"firstRowOnly": false
 				}
 			},
 			{
@@ -45,7 +45,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Lookup1').output.pipelineReturnValue",
+						"value": "@activity('Lookup1').output.value",
 						"type": "Expression"
 					},
 					"isSequential": false,
