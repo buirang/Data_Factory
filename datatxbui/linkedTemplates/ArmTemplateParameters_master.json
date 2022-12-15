@@ -15,7 +15,16 @@
 			"value": ""
 		},
 		"AzureSqlDatabase2_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=@{linkedService().azureSQLdomainName};Initial Catalog=@{linkedService().DBName};User ID=@{linkedService().UserName};Password=@{linkedService().Password}"
+		},
+		"AzureSqlDatabase3_connectionString": {
 			"value": ""
+		},
+		"WWI_DW_standard_Dynamic_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=@{linkedService().AzureSQLdomainName};Initial Catalog=@{linkedService().DBName};User ID=@{linkedService().Username};Password=@{linkedService().Password}"
+		},
+		"WWI_Standard_Dynamic_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=@{linkedService().azureSQLdomainName};Initial Catalog=@{linkedService().DBName};User ID=@{linkedService().UserName};Password=@{linkedService().Password}"
 		},
 		"AzureDataLakeStorage1_properties_typeProperties_url": {
 			"value": "https://sqlvay2uvsbtmycakk.dfs.core.windows.net/"

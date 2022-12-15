@@ -21,7 +21,22 @@
 		},
 		"AzureSqlDatabase2_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase2'"
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase2'",
+			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=@{linkedService().azureSQLdomainName};Initial Catalog=@{linkedService().DBName};User ID=@{linkedService().UserName};Password=@{linkedService().Password}"
+		},
+		"AzureSqlDatabase3_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase3'"
+		},
+		"WWI_DW_standard_Dynamic_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'WWI_DW_standard_Dynamic'",
+			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=@{linkedService().AzureSQLdomainName};Initial Catalog=@{linkedService().DBName};User ID=@{linkedService().Username};Password=@{linkedService().Password}"
+		},
+		"WWI_Standard_Dynamic_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'WWI_Standard_Dynamic'",
+			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=@{linkedService().azureSQLdomainName};Initial Catalog=@{linkedService().DBName};User ID=@{linkedService().UserName};Password=@{linkedService().Password}"
 		},
 		"AzureDataLakeStorage1_properties_typeProperties_url": {
 			"type": "string",
@@ -80,6 +95,24 @@
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"parameters": {
+					"azureSQLdomainName": {
+						"type": "string",
+						"defaultValue": "mysqlservertxbui.database.windows.net"
+					},
+					"DBName": {
+						"type": "string",
+						"defaultValue": "WideWorldImportersDW-Standard"
+					},
+					"UserName": {
+						"type": "string",
+						"defaultValue": "azureuser"
+					},
+					"Password": {
+						"type": "string",
+						"defaultValue": "Thithuy1!"
+					}
+				},
 				"annotations": [],
 				"type": "AzureSqlDatabase",
 				"typeProperties": {
@@ -89,359 +122,80 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/integrationRuntime1')]",
-			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabase3')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"type": "SelfHosted",
-				"typeProperties": {}
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureSqlDatabase3_connectionString')]"
+				}
 			},
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/integrationRuntime2')]",
-			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"name": "[concat(parameters('factoryName'), '/WWI_DW_standard_Dynamic')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"type": "SelfHosted",
-				"typeProperties": {}
+				"parameters": {
+					"AzureSQLdomainName": {
+						"type": "string",
+						"defaultValue": "mysqlservertxbui.database.windows.net"
+					},
+					"DBName": {
+						"type": "string",
+						"defaultValue": "WideWorldImportersDW-Standard"
+					},
+					"Username": {
+						"type": "string",
+						"defaultValue": "azureuser"
+					},
+					"Password": {
+						"type": "string",
+						"defaultValue": "Thithuy1!"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('WWI_DW_standard_Dynamic_connectionString')]"
+				}
 			},
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DimentionTableDW')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
+			"name": "[concat(parameters('factoryName'), '/WWI_Standard_Dynamic')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase2",
-					"type": "LinkedServiceReference"
+				"description": "Dynamic for Sql Azure WWI",
+				"parameters": {
+					"azureSQLdomainName": {
+						"type": "string",
+						"defaultValue": "mysqlservertxbui.database.windows.net"
+					},
+					"DBName": {
+						"type": "string",
+						"defaultValue": "WideWorldImporters-Standard"
+					},
+					"UserName": {
+						"type": "string",
+						"defaultValue": "azureuser"
+					},
+					"Password": {
+						"type": "string",
+						"defaultValue": "Thithuy1!"
+					}
 				},
 				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase2')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/WWIODS')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Json",
+				"type": "AzureSqlDatabase",
 				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"container": "newdata"
-					}
-				},
-				"schema": {
-					"type": "object",
-					"properties": {
-						"OrderID": {
-							"type": "integer"
-						},
-						"OrderLineID": {
-							"type": "integer"
-						},
-						"CustomerID": {
-							"type": "integer"
-						},
-						"LastEditedBy": {
-							"type": "integer"
-						},
-						"InvoiceID": {
-							"type": "integer"
-						},
-						"PackageTypeID": {
-							"type": "integer"
-						},
-						"StockItemID": {
-							"type": "integer"
-						}
-					}
+					"connectionString": "[parameters('WWI_Standard_Dynamic_connectionString')]"
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/WWI_DF')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "OrderID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "OrderLineID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "CustomerID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "LastEditedBy",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "InvoiceID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "PackageTypeID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "StockItemID",
-						"type": "int",
-						"precision": 10
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "WWI_DF"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/WWI_DW')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase2",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "Customer Key",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "WWI Customer ID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Customer",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Bill To Customer",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Category",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Buying Group",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Primary Contact",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Postal Code",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Valid From",
-						"type": "datetime2",
-						"scale": 7
-					},
-					{
-						"name": "Valid To",
-						"type": "datetime2",
-						"scale": 7
-					},
-					{
-						"name": "Lineage Key",
-						"type": "int",
-						"precision": 10
-					}
-				],
-				"typeProperties": {
-					"schema": "Dimension",
-					"table": "Customer"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase2')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/WWI_ODS')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "StockItemName",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DeliveryAddress",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CityName",
-						"type": "nvarchar"
-					},
-					{
-						"name": "StateName",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CountryName",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CustomerName",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CustomerContactPersonName",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CustomerPhoneNumber",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Quantity",
-						"type": "int",
-						"precision": 10
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "WWI_ODS"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/WWIdfsink')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Json",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"container": "newdata"
-					}
-				},
-				"schema": {}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/WWIdw')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureDataLakeStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileSystem": "datalake"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/WatermarkDatatset')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "TableName",
-						"type": "varchar"
-					},
-					{
-						"name": "WatermarkValue",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "watermarktable"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/AzureSqlTable1')]",
@@ -481,91 +235,266 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/SinkDataset')]",
+			"name": "[concat(parameters('factoryName'), '/AzureSqlTable2')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
+					"referenceName": "AzureSqlDatabase1",
 					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
-				"type": "DelimitedText",
+				"type": "AzureSqlTable",
+				"schema": [],
 				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"folderPath": "incrementalcopy",
-						"container": "adf"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"quoteChar": "\""
-				},
-				"schema": []
+					"schema": "Application",
+					"table": "People"
+				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/pl_WWI')]",
+			"name": "[concat(parameters('factoryName'), '/Dimension_Employee')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase3",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "Employee Key",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "WWI Employee ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Employee",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Preferred Name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Is Salesperson",
+						"type": "bit"
+					},
+					{
+						"name": "Photo",
+						"type": "varbinary"
+					},
+					{
+						"name": "Valid From",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "Valid To",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "Lineage Key",
+						"type": "int",
+						"precision": 10
+					}
+				],
+				"typeProperties": {
+					"schema": "Dimension",
+					"table": "Employee"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase3')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DimentionTableDW')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase2",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"azureSQLdomainName": "mysqlservertxbui.database.windows.net",
+						"DBName": "WideWorldImportersDW-Standard",
+						"UserName": "azureuser",
+						"Password": "Thithuy1!"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dimension",
+					"table": "customer"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Dynamic_pipeline_Target')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "WWI_Standard_Dynamic",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"azureSQLdomainName": "mysqlservertxbui.database.windows.net",
+						"DBName": "WideWorldImporters-Standard",
+						"UserName": "azureuser",
+						"Password": "Thithuy1!"
+					}
+				},
+				"parameters": {
+					"TargetSchema": {
+						"type": "String"
+					},
+					"Target_tablename": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": {
+						"value": "@dataset().TargetSchema",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().Target_tablename",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/WWI_Standard_Dynamic')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/WWI_Std_sql')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "WWI_Standard_Dynamic",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"azureSQLdomainName": {
+							"value": "@dataset().azureSQLdomainName",
+							"type": "Expression"
+						},
+						"DBName": {
+							"value": "@dataset().DBName",
+							"type": "Expression"
+						},
+						"UserName": {
+							"value": "@dataset().UserName",
+							"type": "Expression"
+						},
+						"Password": {
+							"value": "@dataset().Password",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"sourceSchema": {
+						"type": "String"
+					},
+					"TableName": {
+						"type": "String"
+					},
+					"azureSQLdomainName": {
+						"type": "string",
+						"defaultValue": "mysqlservertxbui.database.windows.net"
+					},
+					"DBName": {
+						"type": "string",
+						"defaultValue": "WideWorldImporters-Standard"
+					},
+					"UserName": {
+						"type": "string",
+						"defaultValue": "azureuser"
+					},
+					"Password": {
+						"type": "string",
+						"defaultValue": "Thithuy1!"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": {
+						"value": "@dataset().sourceSchema",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().TableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/WWI_Standard_Dynamic')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/WatermarkDatatset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "TableName",
+						"type": "varchar"
+					},
+					{
+						"name": "WatermarkValue",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "watermarktable"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Dynamic_pipeline')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "ODS",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "OLTP",
-								"dependencyConditions": [
-									"Skipped"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "JsonSink",
-								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings"
-								},
-								"formatSettings": {
-									"type": "JsonWriteSettings"
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "WWI_ODS",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "WWIODS",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "OLTP",
+						"name": "Copy data1",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
@@ -583,66 +512,11 @@
 								"partitionOption": "None"
 							},
 							"sink": {
-								"type": "JsonSink",
-								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings"
-								},
-								"formatSettings": {
-									"type": "JsonWriteSettings"
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "WWI_DF",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "WWIdfsink",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "DW",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "ODS",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
+								"type": "AzureSqlSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false,
+								"tableOption": "autoCreate",
+								"disableMetricsCollection": false
 							},
 							"enableStaging": false,
 							"translator": {
@@ -656,19 +530,100 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "WWI_DW",
+								"referenceName": "WWI_Std_sql",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"sourceSchema": {
+										"value": "@pipeline().parameters.sourceSchema",
+										"type": "Expression"
+									},
+									"TableName": {
+										"value": "@pipeline().parameters.TableName",
+										"type": "Expression"
+									},
+									"azureSQLdomainName": "mysqlservertxbui.database.windows.net",
+									"DBName": "WideWorldImporters-Standard",
+									"UserName": "azureuser",
+									"Password": "Thithuy1!"
+								}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "WWIdw",
+								"referenceName": "WWI_Std_sql",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"sourceSchema": {
+										"value": "@pipeline().parameters.SinkSchema",
+										"type": "Expression"
+									},
+									"TableName": {
+										"value": "@pipeline().parameters.SinkTablename",
+										"type": "Expression"
+									},
+									"azureSQLdomainName": "mysqlservertxbui.database.windows.net",
+									"DBName": "WideWorldImporters-Standard",
+									"UserName": "azureuser",
+									"Password": "Thithuy1!"
+								}
 							}
 						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"sourceSchema": {
+						"type": "string"
 					},
+					"TableName": {
+						"type": "string"
+					},
+					"SinkSchema": {
+						"type": "string"
+					},
+					"SinkTablename": {
+						"type": "string"
+					},
+					"SourceSQLdomainName": {
+						"type": "string"
+					},
+					"SourceDBName": {
+						"type": "string"
+					},
+					"Sourceusername": {
+						"type": "string"
+					},
+					"Sourcepw": {
+						"type": "string"
+					},
+					"SinkDomainName": {
+						"type": "string"
+					},
+					"SinkDBName": {
+						"type": "string"
+					},
+					"Sinkusername": {
+						"type": "string"
+					},
+					"Sinkpw": {
+						"type": "string"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/WWI_Std_sql')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Incremental_Loading')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
 					{
 						"name": "LookupOldWaterMarkActivity",
 						"type": "Lookup",
@@ -748,30 +703,19 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": "select * from data_source_table where LastModifytime > '@{activity('LookupOldWaterMarkActivity').output.firstRow.WatermarkValue}' and LastModifytime <= '@{activity('LookupNewWaterMarkActivity').output.firstRow.NewWatermarkvalue}'",
+								"sqlReaderQuery": {
+									"value": "select * from data_source_table where LastModifytime > '@{activity('LookupOldWaterMarkActivity').output.firstRow.WatermarkValue}' and LastModifytime <= '@{activity('LookupNewWaterMarkActivity').output.firstRow.NewWatermarkvalue}'",
+									"type": "Expression"
+								},
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
 							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
+								"type": "AzureSqlSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
 							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
+							"enableStaging": false
 						},
 						"inputs": [
 							{
@@ -782,7 +726,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "SinkDataset",
+								"referenceName": "AzureSqlTable1",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -801,17 +745,7 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"storedProcedureName": "[[dbo].[usp_write_watermark]",
-							"storedProcedureParameters": {
-								"LastModifiedtime": {
-									"value": "@{activity('LookupNewWaterMarkActivity').output.firstRow.NewWatermarkvalue}.",
-									"type": "DateTime"
-								},
-								"TableName": {
-									"value": "@{activity('LookupOldWaterMarkActivity').output.firstRow.TableName.",
-									"type": "String"
-								}
-							}
+							"storedProcedureName": "[[dbo].[usp_write_watermark]"
 						},
 						"linkedServiceName": {
 							"referenceName": "AzureSqlDatabase1",
@@ -896,16 +830,274 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/WWI_ODS')]",
-				"[concat(variables('factoryId'), '/datasets/WWIODS')]",
-				"[concat(variables('factoryId'), '/datasets/WWI_DF')]",
-				"[concat(variables('factoryId'), '/datasets/WWIdfsink')]",
-				"[concat(variables('factoryId'), '/datasets/WWI_DW')]",
-				"[concat(variables('factoryId'), '/datasets/WWIdw')]",
 				"[concat(variables('factoryId'), '/datasets/WatermarkDatatset')]",
 				"[concat(variables('factoryId'), '/datasets/AzureSqlTable1')]",
-				"[concat(variables('factoryId'), '/datasets/SinkDataset')]",
 				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Lookup_pipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Lookup1",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "Dynamic_pipeline_Target",
+								"type": "DatasetReference",
+								"parameters": {
+									"TargetSchema": "dbo",
+									"Target_tablename": "orders"
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "For Each File Name",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup1').output.value",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"batchCount": 1,
+							"activities": [
+								{
+									"name": "Copy data1",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "AzureSqlSink",
+											"writeBehavior": "insert",
+											"sqlWriterUseTableLock": false,
+											"tableOption": "autoCreate",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "WWI_Std_sql",
+											"type": "DatasetReference",
+											"parameters": {
+												"sourceSchema": {
+													"value": "@pipeline().parameters.sourceShema",
+													"type": "Expression"
+												},
+												"TableName": {
+													"value": "@pipeline().parameters.sourceTableName",
+													"type": "Expression"
+												},
+												"azureSQLdomainName": "mysqlservertxbui.database.windows.net",
+												"DBName": "WideWorldImporters-Standard",
+												"UserName": "azureuser",
+												"Password": "Thithuy1!"
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "WWI_Std_sql",
+											"type": "DatasetReference",
+											"parameters": {
+												"sourceSchema": {
+													"value": "@pipeline().parameters.SinkSchema",
+													"type": "Expression"
+												},
+												"TableName": {
+													"value": "@pipeline().parameters.SinkTablename",
+													"type": "Expression"
+												},
+												"azureSQLdomainName": "mysqlservertxbui.database.windows.net",
+												"DBName": "WideWorldImporters-Standard",
+												"UserName": "azureuser",
+												"Password": "Thithuy1!"
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"sourceShema": {
+						"type": "string",
+						"defaultValue": "sales"
+					},
+					"sourceTableName": {
+						"type": "string",
+						"defaultValue": "orders"
+					},
+					"SinkSchema": {
+						"type": "string",
+						"defaultValue": "dbo"
+					},
+					"SinkTableName": {
+						"type": "string",
+						"defaultValue": "orders"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Dynamic_pipeline_Target')]",
+				"[concat(variables('factoryId'), '/datasets/WWI_Std_sql')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SDC type 2')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Dimension_Employee",
+								"type": "DatasetReference"
+							},
+							"name": "Employee"
+						},
+						{
+							"dataset": {
+								"referenceName": "AzureSqlTable2",
+								"type": "DatasetReference"
+							},
+							"name": "EmployeeTable"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "AzureSqlTable2",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "AddingisActive",
+							"description": "Creating isActiveColum"
+						},
+						{
+							"name": "ActiveEmployee",
+							"description": "Renaming Lastmodified to isActive'"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          {Employee Key} as integer,",
+						"          {WWI Employee ID} as integer,",
+						"          Employee as string,",
+						"          {Preferred Name} as string,",
+						"          {Is Salesperson} as boolean,",
+						"          Photo as binary,",
+						"          {Valid From} as timestamp,",
+						"          {Valid To} as timestamp,",
+						"          {Lineage Key} as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> Employee",
+						"source(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     limit: 100,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> EmployeeTable",
+						"Employee derive(isActive = 1) ~> AddingisActive",
+						"AddingisActive select(mapColumn(",
+						"          PersonID = {WWI Employee ID},",
+						"          Name = Employee,",
+						"          isActive = {Valid From}",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> ActiveEmployee",
+						"AddingisActive sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          {Employee Key},",
+						"          {WWI Employee ID},",
+						"          Employee,",
+						"          {Preferred Name},",
+						"          {Is Salesperson},",
+						"          Photo,",
+						"          {Valid From},",
+						"          {Valid To},",
+						"          {Lineage Key},",
+						"          isActive",
+						"     )) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Dimension_Employee')]",
+				"[concat(variables('factoryId'), '/datasets/AzureSqlTable2')]"
 			]
 		},
 		{
@@ -918,119 +1110,57 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "WWI_DF",
+								"referenceName": "WWI_Std_sql",
 								"type": "DatasetReference"
 							},
 							"name": "OLTP"
 						},
 						{
 							"dataset": {
-								"referenceName": "WWI_ODS",
+								"referenceName": "AzureSqlTable1",
 								"type": "DatasetReference"
 							},
 							"name": "ODStransfer"
-						},
-						{
-							"dataset": {
-								"referenceName": "WWI_DW",
-								"type": "DatasetReference"
-							},
-							"name": "DWScdtype2"
 						}
 					],
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "WWI_ODS",
+								"referenceName": "AzureSqlTable1",
 								"type": "DatasetReference"
 							},
 							"name": "ODS"
 						},
 						{
 							"dataset": {
-								"referenceName": "WWI_DW",
+								"referenceName": "DimentionTableDW",
 								"type": "DatasetReference"
 							},
 							"name": "DW"
 						}
 					],
-					"transformations": [
-						{
-							"name": "derivedColumn1"
-						},
-						{
-							"name": "surrogateKey1"
-						},
-						{
-							"name": "exists1"
-						}
-					],
+					"transformations": [],
 					"scriptLines": [
-						"source(output(",
-						"          OrderID as integer,",
-						"          OrderLineID as integer,",
-						"          CustomerID as integer,",
-						"          LastEditedBy as integer,",
-						"          InvoiceID as integer,",
-						"          PackageTypeID as integer,",
-						"          StockItemID as integer",
-						"     ),",
-						"     allowSchemaDrift: true,",
+						"source(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     limit: 100,",
 						"     isolationLevel: 'READ_UNCOMMITTED',",
 						"     format: 'table') ~> OLTP",
 						"source(output(",
-						"          StockItemName as string,",
-						"          DeliveryAddress as string,",
-						"          CityName as string,",
-						"          StateName as string,",
-						"          CountryName as string,",
-						"          CustomerName as string,",
-						"          CustomerContactPersonName as string,",
-						"          CustomerPhoneNumber as string,",
-						"          Quantity as integer",
+						"          PersonID as integer,",
+						"          Name as string,",
+						"          LastModifytime as timestamp",
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     isolationLevel: 'READ_UNCOMMITTED',",
 						"     format: 'table') ~> ODStransfer",
-						"source(output(",
-						"          {Customer Key} as integer,",
-						"          {WWI Customer ID} as integer,",
-						"          Customer as string,",
-						"          {Bill To Customer} as string,",
-						"          Category as string,",
-						"          {Buying Group} as string,",
-						"          {Primary Contact} as string,",
-						"          {Postal Code} as string,",
-						"          {Valid From} as timestamp,",
-						"          {Valid To} as timestamp,",
-						"          {Lineage Key} as integer",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     format: 'table') ~> DWScdtype2",
-						"DWScdtype2 derive({Customer Key} = {Customer Key} < 100) ~> derivedColumn1",
-						"derivedColumn1 keyGenerate(output({Lineage Key} as long),",
-						"     startAt: 1L,",
-						"     stepValue: 1L) ~> surrogateKey1",
-						"surrogateKey1, OLTP exists({WWI Customer ID} == OrderID,",
-						"     negate:false,",
-						"     broadcast: 'auto')~> exists1",
 						"OLTP sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     input(",
-						"          StockItemName as string,",
-						"          DeliveryAddress as string,",
-						"          CityName as string,",
-						"          StateName as string,",
-						"          CountryName as string,",
-						"          CustomerName as string,",
-						"          CustomerContactPersonName as string,",
-						"          CustomerPhoneNumber as string,",
-						"          Quantity as integer",
+						"          PersonID as integer,",
+						"          Name as string,",
+						"          LastModifytime as timestamp",
 						"     ),",
 						"     deletable:false,",
 						"     insertable:true,",
@@ -1042,19 +1172,6 @@
 						"     errorHandlingOption: 'stopOnFirstError') ~> ODS",
 						"ODStransfer sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     input(",
-						"          {Customer Key} as integer,",
-						"          {WWI Customer ID} as integer,",
-						"          Customer as string,",
-						"          {Bill To Customer} as string,",
-						"          Category as string,",
-						"          {Buying Group} as string,",
-						"          {Primary Contact} as string,",
-						"          {Postal Code} as string,",
-						"          {Valid From} as timestamp,",
-						"          {Valid To} as timestamp,",
-						"          {Lineage Key} as integer",
-						"     ),",
 						"     deletable:false,",
 						"     insertable:true,",
 						"     updateable:false,",
@@ -1067,9 +1184,9 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/WWI_DF')]",
-				"[concat(variables('factoryId'), '/datasets/WWI_ODS')]",
-				"[concat(variables('factoryId'), '/datasets/WWI_DW')]"
+				"[concat(variables('factoryId'), '/datasets/WWI_Std_sql')]",
+				"[concat(variables('factoryId'), '/datasets/AzureSqlTable1')]",
+				"[concat(variables('factoryId'), '/datasets/DimentionTableDW')]"
 			]
 		}
 	]
