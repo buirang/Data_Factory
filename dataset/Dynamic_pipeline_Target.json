@@ -1,0 +1,36 @@
+{
+	"name": "Dynamic_pipeline_Target",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "WWI_Standard_Dynamic",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"azureSQLdomainName": "mysqlservertxbui.database.windows.net",
+				"DBName": "WideWorldImporters-Standard",
+				"UserName": "azureuser",
+				"Password": "Thithuy1!"
+			}
+		},
+		"parameters": {
+			"TargetSchema": {
+				"type": "String"
+			},
+			"Target_tablename": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": {
+				"value": "@dataset().TargetSchema",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@dataset().Target_tablename",
+				"type": "Expression"
+			}
+		}
+	}
+}

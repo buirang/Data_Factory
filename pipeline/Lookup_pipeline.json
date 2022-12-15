@@ -21,23 +21,14 @@
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "WWI_Std_sql",
+						"referenceName": "Dynamic_pipeline_Target",
 						"type": "DatasetReference",
 						"parameters": {
-							"sourceSchema": {
-								"value": "@pipeline().parameters.LookupSchema",
-								"type": "Expression"
-							},
-							"TableName": {
-								"value": "@pipeline().parameters.LookupTable",
-								"type": "Expression"
-							},
-							"azureSQLdomainName": "mysqlservertxbui.database.windows.net",
-							"DBName": "WideWorldImporters-Standard",
-							"UserName": "azureuser",
-							"Password": "Thithuy1!"
+							"TargetSchema": "dbo",
+							"Target_tablename": "orders"
 						}
-					}
+					},
+					"firstRowOnly": true
 				}
 			},
 			{
@@ -54,7 +45,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Lookup1').output",
+						"value": "@activity('Lookup1').output.value",
 						"type": "Expression"
 					},
 					"isSequential": false,
@@ -101,11 +92,11 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"sourceSchema": {
-											"value": "@pipeline().parameters.sourceShema",
+											"value": "@pipeline().parameters.sourceSchema",
 											"type": "Expression"
 										},
 										"TableName": {
-											"value": "@pipeline().parameters.sourceTableName",
+											"value": "@pipeline().parameters.TableName",
 											"type": "Expression"
 										},
 										"azureSQLdomainName": "mysqlservertxbui.database.windows.net",
@@ -125,7 +116,7 @@
 											"type": "Expression"
 										},
 										"TableName": {
-											"value": "@pipeline().parameters.SinkTableName",
+											"value": "@pipeline().parameters.SinkTablename",
 											"type": "Expression"
 										},
 										"azureSQLdomainName": "mysqlservertxbui.database.windows.net",
@@ -156,14 +147,6 @@
 			"SinkTableName": {
 				"type": "string",
 				"defaultValue": "orders"
-			},
-			"LookupSchema": {
-				"type": "string",
-				"defaultValue": "sales"
-			},
-			"LookupTable": {
-				"type": "string",
-				"defaultValue": "orderlines"
 			}
 		},
 		"annotations": []
