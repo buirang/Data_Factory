@@ -5,40 +5,20 @@
 		"typeProperties": {
 			"sources": [
 				{
-					"dataset": {
-						"referenceName": "WWI_DF",
-						"type": "DatasetReference"
-					},
 					"name": "OLTP"
 				},
 				{
-					"dataset": {
-						"referenceName": "WWI_ODS",
-						"type": "DatasetReference"
-					},
 					"name": "ODStransfer"
 				},
 				{
-					"dataset": {
-						"referenceName": "WWI_DW",
-						"type": "DatasetReference"
-					},
 					"name": "DWScdtype2"
 				}
 			],
 			"sinks": [
 				{
-					"dataset": {
-						"referenceName": "WWI_ODS",
-						"type": "DatasetReference"
-					},
 					"name": "ODS"
 				},
 				{
-					"dataset": {
-						"referenceName": "WWI_DW",
-						"type": "DatasetReference"
-					},
 					"name": "DW"
 				}
 			],
@@ -65,9 +45,7 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     limit: 100,",
-				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> OLTP",
+				"     limit: 100) ~> OLTP",
 				"source(output(",
 				"          StockItemName as string,",
 				"          DeliveryAddress as string,",
@@ -80,9 +58,7 @@
 				"          Quantity as integer",
 				"     ),",
 				"     allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> ODStransfer",
+				"     validateSchema: false) ~> ODStransfer",
 				"source(output(",
 				"          {Customer Key} as integer,",
 				"          {WWI Customer ID} as integer,",
@@ -97,9 +73,7 @@
 				"          {Lineage Key} as integer",
 				"     ),",
 				"     allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> DWScdtype2",
+				"     validateSchema: false) ~> DWScdtype2",
 				"DWScdtype2 derive({Customer Key} = {Customer Key} < 100) ~> derivedColumn1",
 				"derivedColumn1 keyGenerate(output({Lineage Key} as long),",
 				"     startAt: 1L,",
@@ -109,48 +83,14 @@
 				"     broadcast: 'auto')~> exists1",
 				"OLTP sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     input(",
-				"          StockItemName as string,",
-				"          DeliveryAddress as string,",
-				"          CityName as string,",
-				"          StateName as string,",
-				"          CountryName as string,",
-				"          CustomerName as string,",
-				"          CustomerContactPersonName as string,",
-				"          CustomerPhoneNumber as string,",
-				"          Quantity as integer",
-				"     ),",
-				"     deletable:false,",
-				"     insertable:true,",
-				"     updateable:false,",
-				"     upsertable:false,",
-				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> ODS",
+				"     format: 'table') ~> ODS",
 				"ODStransfer sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     input(",
-				"          {Customer Key} as integer,",
-				"          {WWI Customer ID} as integer,",
-				"          Customer as string,",
-				"          {Bill To Customer} as string,",
-				"          Category as string,",
-				"          {Buying Group} as string,",
-				"          {Primary Contact} as string,",
-				"          {Postal Code} as string,",
-				"          {Valid From} as timestamp,",
-				"          {Valid To} as timestamp,",
-				"          {Lineage Key} as integer",
-				"     ),",
-				"     deletable:false,",
-				"     insertable:true,",
-				"     updateable:false,",
-				"     upsertable:false,",
-				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> DW"
+				"     format: 'table') ~> DW"
 			]
 		}
 	}

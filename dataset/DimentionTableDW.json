@@ -3,7 +3,13 @@
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureSqlDatabase2",
-			"type": "LinkedServiceReference"
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"azureSQLdomainName": "mysqlservertxbui.database.windows.net",
+				"DBName": "WideWorldImportersDW-Standard",
+				"UserName": "azureuser",
+				"Password": "Thithuy1!"
+			}
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",
