@@ -51,12 +51,6 @@
 						]
 					}
 				],
-				"userProperties": [
-					{
-						"name": "schemaName"
-					},
-					null
-				],
 				"typeProperties": {
 					"items": {
 						"value": "@activity('Lookup1').output",
