@@ -1,0 +1,102 @@
+{
+	"name": "SDC type 2",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Dimension_Employee",
+						"type": "DatasetReference"
+					},
+					"name": "Employee"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable2",
+						"type": "DatasetReference"
+					},
+					"name": "EmployeeTable"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable2",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "AddingisActive",
+					"description": "Creating isActiveColum"
+				},
+				{
+					"name": "ActiveEmployee",
+					"description": "Renaming Lastmodified to isActive'"
+				},
+				{
+					"name": "lookup1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          {Employee Key} as integer,",
+				"          {WWI Employee ID} as integer,",
+				"          Employee as string,",
+				"          {Preferred Name} as string,",
+				"          {Is Salesperson} as boolean,",
+				"          Photo as binary,",
+				"          {Valid From} as timestamp,",
+				"          {Valid To} as timestamp,",
+				"          {Lineage Key} as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> Employee",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     limit: 100,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> EmployeeTable",
+				"Employee derive(isActive = 1) ~> AddingisActive",
+				"lookup1 select(mapColumn(",
+				"          PersonID,",
+				"          Name,",
+				"          isActive = LastModifytime",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> ActiveEmployee",
+				"EmployeeTable, Employee lookup(PersonID == Employee@{WWI Employee ID},",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> lookup1",
+				"AddingisActive sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          {Employee Key},",
+				"          {WWI Employee ID},",
+				"          Employee,",
+				"          {Preferred Name},",
+				"          {Is Salesperson},",
+				"          Photo,",
+				"          {Valid From},",
+				"          {Valid To},",
+				"          {Lineage Key},",
+				"          isActive",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}
