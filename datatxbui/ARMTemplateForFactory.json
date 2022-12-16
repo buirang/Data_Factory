@@ -101,10 +101,22 @@
 										"value": "@pipeline().parameters.TableName",
 										"type": "Expression"
 									},
-									"azureSQLdomainName": "mysqlservertxbui.database.windows.net",
-									"DBName": "WideWorldImporters-Standard",
-									"UserName": "azureuser",
-									"Password": "Thithuy1!"
+									"azureSQLdomainName": {
+										"value": "@pipeline().parameters.SourceSQLdomainName",
+										"type": "Expression"
+									},
+									"DBName": {
+										"value": "@pipeline().parameters.SourceDBName",
+										"type": "Expression"
+									},
+									"UserName": {
+										"value": "@pipeline().parameters.Sourceusername",
+										"type": "Expression"
+									},
+									"Password": {
+										"value": "@pipeline().parameters.Sourcepw",
+										"type": "Expression"
+									}
 								}
 							}
 						],
@@ -121,10 +133,22 @@
 										"value": "@pipeline().parameters.SinkTablename",
 										"type": "Expression"
 									},
-									"azureSQLdomainName": "mysqlservertxbui.database.windows.net",
-									"DBName": "WideWorldImporters-Standard",
-									"UserName": "azureuser",
-									"Password": "Thithuy1!"
+									"azureSQLdomainName": {
+										"value": "@pipeline().parameters.SinkDomainName",
+										"type": "Expression"
+									},
+									"DBName": {
+										"value": "@pipeline().parameters.SinkDBName",
+										"type": "Expression"
+									},
+									"UserName": {
+										"value": "@pipeline().parameters.Sinkusername",
+										"type": "Expression"
+									},
+									"Password": {
+										"value": "@pipeline().parameters.Sinkpw",
+										"type": "Expression"
+									}
 								}
 							}
 						]
