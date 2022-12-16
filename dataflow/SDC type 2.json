@@ -22,7 +22,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "DimEmployee",
+						"referenceName": "AzureSqlTable1",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
@@ -79,20 +79,15 @@
 				"     format: 'table') ~> EmployeeTable",
 				"Employee derive(isActive = 1) ~> AddingisActive",
 				"Employee filter({Is Salesperson} == true()) ~> IsSalePerson",
-				"EmployeeTable alterRow(deleteIf({WWI Employee ID}=={WWI Employee ID})) ~> alterRow1",
+				"EmployeeTable alterRow(deleteIf({WWI Employee ID}=={WWI Employee ID}),",
+				"     deleteIf(Employee==Employee)) ~> alterRow1",
 				"alterRow1 derive(isActive = 1) ~> derivedColumn1",
 				"IsSalePerson sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
-				"          {Employee Key} as integer,",
-				"          {WWI Employee ID} as integer,",
-				"          Employee as string,",
-				"          {Preferred Name} as string,",
-				"          {Is Salesperson} as boolean,",
-				"          Photo as binary,",
-				"          {Valid From} as timestamp,",
-				"          {Valid To} as timestamp,",
-				"          {Lineage Key} as integer",
+				"          PersonID as integer,",
+				"          Name as string,",
+				"          LastModifytime as timestamp",
 				"     ),",
 				"     deletable:false,",
 				"     insertable:true,",
