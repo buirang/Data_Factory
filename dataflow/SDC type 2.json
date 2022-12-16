@@ -22,7 +22,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "DimentionTableDW",
+						"referenceName": "DimEmployee",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
@@ -115,6 +115,17 @@
 				"derivedColumn1 filter(!isNull({WWI Employee ID})) ~> filter2",
 				"RemoveColumns1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     input(",
+				"          {Employee Key} as integer,",
+				"          {WWI Employee ID} as integer,",
+				"          Employee as string,",
+				"          {Preferred Name} as string,",
+				"          {Is Salesperson} as boolean,",
+				"          Photo as binary,",
+				"          {Valid From} as timestamp,",
+				"          {Valid To} as timestamp,",
+				"          {Lineage Key} as integer",
+				"     ),",
 				"     deletable:false,",
 				"     insertable:true,",
 				"     updateable:false,",
