@@ -2,15 +2,21 @@
 	"name": "AzureSqlTable2",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "AzureSqlDatabase1",
-			"type": "LinkedServiceReference"
+			"referenceName": "WWI_DW_standard_Dynamic",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"AzureSQLdomainName": "mysqlservertxbui.database.windows.net",
+				"DBName": "WideWorldImportersDW-Standard",
+				"Username": "azureuser",
+				"Password": "Thithuy1!"
+			}
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",
 		"schema": [],
 		"typeProperties": {
-			"schema": "Application",
-			"table": "People"
+			"schema": "Dimension",
+			"table": "customer"
 		}
 	}
 }
