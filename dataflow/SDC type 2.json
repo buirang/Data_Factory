@@ -22,7 +22,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "AzureSqlTable1",
+						"referenceName": "DimentionTableDW",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
@@ -84,11 +84,6 @@
 				"alterRow1 derive(isActive = 1) ~> derivedColumn1",
 				"IsSalePerson sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     input(",
-				"          PersonID as integer,",
-				"          Name as string,",
-				"          LastModifytime as timestamp",
-				"     ),",
 				"     deletable:false,",
 				"     insertable:true,",
 				"     updateable:false,",
