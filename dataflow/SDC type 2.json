@@ -6,14 +6,14 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "Dimension_Employee",
+						"referenceName": "DimEmployee",
 						"type": "DatasetReference"
 					},
 					"name": "Employee"
 				},
 				{
 					"dataset": {
-						"referenceName": "AzureSqlTable2",
+						"referenceName": "DimEmployee",
 						"type": "DatasetReference"
 					},
 					"name": "EmployeeTable"
@@ -22,7 +22,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "AzureSqlTable2",
+						"referenceName": "DimEmployee",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
@@ -34,8 +34,15 @@
 					"description": "Creating isActiveColum"
 				},
 				{
-					"name": "ActiveEmployee",
-					"description": "Renaming Lastmodified to isActive'"
+					"name": "IsSalePerson",
+					"description": "Filtering rows using expressions on columns 'Is Salesperson' or not"
+				},
+				{
+					"name": "alterRow1",
+					"description": "Deleting duplicate record"
+				},
+				{
+					"name": "derivedColumn1"
 				}
 			],
 			"scriptLines": [
@@ -54,21 +61,39 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> Employee",
-				"source(allowSchemaDrift: true,",
+				"source(output(",
+				"          {Employee Key} as integer,",
+				"          {WWI Employee ID} as integer,",
+				"          Employee as string,",
+				"          {Preferred Name} as string,",
+				"          {Is Salesperson} as boolean,",
+				"          Photo as binary,",
+				"          {Valid From} as timestamp,",
+				"          {Valid To} as timestamp,",
+				"          {Lineage Key} as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     limit: 100,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> EmployeeTable",
 				"Employee derive(isActive = 1) ~> AddingisActive",
-				"AddingisActive select(mapColumn(",
-				"          PersonID = {WWI Employee ID},",
-				"          Name = Employee,",
-				"          isActive = {Valid From}",
-				"     ),",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> ActiveEmployee",
-				"AddingisActive sink(allowSchemaDrift: true,",
+				"Employee filter({Is Salesperson} == true()) ~> IsSalePerson",
+				"EmployeeTable alterRow(deleteIf({WWI Employee ID}=={WWI Employee ID})) ~> alterRow1",
+				"alterRow1 derive(isActive = 1) ~> derivedColumn1",
+				"IsSalePerson sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     input(",
+				"          {Employee Key} as integer,",
+				"          {WWI Employee ID} as integer,",
+				"          Employee as string,",
+				"          {Preferred Name} as string,",
+				"          {Is Salesperson} as boolean,",
+				"          Photo as binary,",
+				"          {Valid From} as timestamp,",
+				"          {Valid To} as timestamp,",
+				"          {Lineage Key} as integer",
+				"     ),",
 				"     deletable:false,",
 				"     insertable:true,",
 				"     updateable:false,",
@@ -86,8 +111,7 @@
 				"          Photo,",
 				"          {Valid From},",
 				"          {Valid To},",
-				"          {Lineage Key},",
-				"          isActive",
+				"          {Lineage Key}",
 				"     )) ~> sink1"
 			]
 		}

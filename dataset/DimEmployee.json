@@ -1,5 +1,5 @@
 {
-	"name": "Dimension_Employee",
+	"name": "DimEmployee",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureSqlDatabase3",
