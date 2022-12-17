@@ -1,0 +1,119 @@
+{
+	"name": "dataflow2",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "UpdatedCustomer",
+						"type": "DatasetReference"
+					},
+					"name": "UpdatedCustomer"
+				},
+				{
+					"dataset": {
+						"referenceName": "DimEmployee",
+						"type": "DatasetReference"
+					},
+					"name": "DimCustomer"
+				},
+				{
+					"name": "source1"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "AddHashInput"
+				},
+				{
+					"name": "FilterForActive"
+				},
+				{
+					"name": "AddHashExiting",
+					"description": "Creating/updating Id_hash, customer_hash"
+				},
+				{
+					"name": "NewandUpdatedRow"
+				},
+				{
+					"name": "AddKey1"
+				},
+				{
+					"name": "JoinWithMaxSurrogateKey"
+				},
+				{
+					"name": "AddingDimensionColumn"
+				},
+				{
+					"name": "Filterexists"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     PrimaryKey as string ('WWI Customer ID'),",
+				"     Column as string ('Customer Key,CUstomer,Bill To Customer,Category,Buying Group,Primary Contact,Postal Code,Valid From,Valid To,Lineage')",
+				"}",
+				"source(output(",
+				"          Column_1 as string,",
+				"          Column_2 as string,",
+				"          Column_3 as string,",
+				"          Column_4 as string,",
+				"          Column_5 as string,",
+				"          Column_6 as string,",
+				"          Column_7 as string,",
+				"          Column_8 as string,",
+				"          Column_9 as string,",
+				"          Column_10 as string,",
+				"          Column_11 as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> UpdatedCustomer",
+				"source(output(",
+				"          {Employee Key} as integer,",
+				"          {WWI Employee ID} as integer,",
+				"          Employee as string,",
+				"          {Preferred Name} as string,",
+				"          {Is Salesperson} as boolean,",
+				"          Photo as binary,",
+				"          {Valid From} as timestamp,",
+				"          {Valid To} as timestamp,",
+				"          {Lineage Key} as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     inferDriftedColumnTypes: true,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> DimCustomer",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false) ~> source1",
+				"UpdatedCustomer derive(Id_hash = md5(byName($PrimaryKey)),",
+				"          column_hash = md5(byNames(split($Column, ',')))) ~> AddHashInput",
+				"DimCustomer filter(toInteger(byName('Lineage Key'))==2) ~> FilterForActive",
+				"FilterForActive derive(Id_hash = md5(byNames(split($PrimaryKey,','))),",
+				"          column_hash = md5(byNames(split($Column,','))),",
+				"     partitionBy('hash', 1)) ~> AddHashExiting",
+				"AddHashInput, AddHashExiting exists(AddHashInput@Id_hash == AddHashExiting@Id_hash",
+				"     && AddHashInput@column_hash == AddHashExiting@column_hash,",
+				"     negate:true,",
+				"     broadcast: 'auto')~> NewandUpdatedRow",
+				"NewandUpdatedRow keyGenerate(output(Key as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> AddKey1",
+				"AddKey1, AddHashExiting join(Key == Key || true(),",
+				"     joinType:'cross',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> JoinWithMaxSurrogateKey",
+				"JoinWithMaxSurrogateKey derive(Active = 1,",
+				"          {Active Start Time} = currentUTC(),",
+				"     partitionBy('hash', 1)) ~> AddingDimensionColumn",
+				"AddHashExiting, NewandUpdatedRow exists(AddHashExiting@Id_hash == AddHashInput@Id_hash,",
+				"     negate:false,",
+				"     broadcast: 'auto')~> Filterexists"
+			]
+		}
+	}
+}
