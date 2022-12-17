@@ -1,0 +1,44 @@
+{
+	"name": "SCD type 2",
+	"properties": {
+		"activities": [
+			{
+				"name": "Data flow1",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "SCD_Type2_flowchart",
+						"type": "DataFlowReference",
+						"parameters": {
+							"PrimaryKey": "'WWI Customer ID'",
+							"Column": "'Customer Key,CUstomer,Bill To Customer,Category,Buying Group,Primary Contact,Postal Code,Valid From,Valid To,Lineage'"
+						},
+						"datasetParameters": {
+							"DimCustomer": {
+								"Table": "Customer"
+							},
+							"FinalSCDtype2": {
+								"Table": "Customer"
+							}
+						}
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"annotations": []
+	}
+}
