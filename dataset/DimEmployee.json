@@ -2,8 +2,19 @@
 	"name": "DimEmployee",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "AzureSqlDatabase3",
-			"type": "LinkedServiceReference"
+			"referenceName": "WWI_DW_standard_Dynamic",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"AzureSQLdomainName": "mysqlservertxbui.database.windows.net",
+				"DBName": "WideWorldImportersDW-Standard",
+				"Username": "azureuser",
+				"Password": "Thithuy1!"
+			}
+		},
+		"parameters": {
+			"Table": {
+				"type": "string"
+			}
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",
@@ -52,7 +63,10 @@
 		],
 		"typeProperties": {
 			"schema": "Dimension",
-			"table": "Employee"
+			"table": {
+				"value": "@dataset().Table",
+				"type": "Expression"
+			}
 		}
 	}
 }
