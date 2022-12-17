@@ -1,5 +1,5 @@
 {
-	"name": "DimEmployee",
+	"name": "DimCustomer",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "WWI_DW_standard_Dynamic",
